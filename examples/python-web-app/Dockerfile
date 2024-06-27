@@ -1,19 +1,20 @@
-FROM ubuntu
+# Use a minimal Python base image
+FROM python:3.9-slim
 
+# Set working directory
 WORKDIR /app
 
-COPY requirements.txt /app
-COPY devops /app
+# Copy requirements.txt and devops directory to /app
+COPY requirements.txt .
+COPY devops/ ./devops/
 
+# Install dependencies
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    pip install -r requirements.txt && \
-    cd devops
+    apt-get install -y gcc && \
+    pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["python3"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
-
-
+# Set the default command to run Django development server
+CMD ["python", "devops/manage.py", "runserver", "0.0.0.0:8000"]
 
 
 
